@@ -1,0 +1,28 @@
+{
+    "name": "arno/custom-export",
+    "description": "A Kimai 2 plugin",
+    "type": "kimai-plugin",
+    "version": "0.1",
+    "require": {
+        "kimai/kimai2-composer": "*"
+    },
+    "keywords": [
+        "kimai",
+        "kimai-plugin"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Arno Schumacher",
+            "email": "arno_schumacher@gmx.de",
+            "homepage": "https://eppendorfer-landstrasse.de"
+        }
+    ],
+    "extra": {
+        "kimai": {
+            "require": "1.7",
+            "version": "0.5",
+            "name": "CustomExportBundle"
+        }
+    }
+}
