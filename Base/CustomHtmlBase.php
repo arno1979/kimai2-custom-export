@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace KimaiPlugin\CustomExportBundle\Export;
+namespace KimaiPlugin\CustomExportBundle\Base;
 
 use App\Entity\MetaTableTypeInterface;
 use App\Event\ActivityMetaDisplayEvent;
@@ -23,7 +23,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
-class CustomExportBase
+class CustomHtmlBase
 {
     use \App\Export\Renderer\RendererTrait;
 

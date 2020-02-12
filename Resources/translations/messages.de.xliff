@@ -4,7 +4,11 @@
         <body>
             <trans-unit id="button.print-ascustom">
                 <source>button.print-ascustom</source>
-                <target>HTML Export</target>
+                <target>Custom HTML Export</target>
+            </trans-unit>
+            <trans-unit id="button.pdf-ascustom">
+                <source>button.pdf-ascustom</source>
+                <target>Custom PDF Export</target>
             </trans-unit>
         </body>
     </file>

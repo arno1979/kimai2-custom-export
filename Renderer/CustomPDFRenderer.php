@@ -7,21 +7,20 @@
  * file that was distributed with this source code.
  */
 
-namespace KimaiPlugin\CustomExportBundle\Export;
+namespace KimaiPlugin\CustomExportBundle\Renderer;
 
-use KimaiPlugin\CustomExportBundle\Export\CustomExportBase as BaseHtmlRenderer;
+use KimaiPlugin\CustomExportBundle\Base\CustomPDFBase as BasePDFRenderer;
 use App\Export\RendererInterface;
 
-
-final class CustomExportRenderer extends BaseHtmlRenderer implements RendererInterface
+final class CustomPDFRenderer extends BasePDFRenderer implements RendererInterface
 {
     public function getIcon(): string
     {
-        return 'print';
+        return 'pdf';
     }
 
     public function getTitle(): string
     {
-        return 'print-ascustom';
+        return 'pdf-ascustom';
     }
 }
