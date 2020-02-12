@@ -1,8 +1,8 @@
 {
-    "name": "arno/custom-export",
+    "name": "arno1979/kimai-custom-export",
     "description": "A Kimai 2 plugin",
     "type": "kimai-plugin",
-    "version": "0.1",
+    "version": "1.0",
     "require": {
         "kimai/kimai2-composer": "*"
     },
