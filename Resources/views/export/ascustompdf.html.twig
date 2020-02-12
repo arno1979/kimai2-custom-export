@@ -53,8 +53,8 @@
 
 <h2 style="margin-bottom: 0; padding-bottom: 0">{{ 'export.document_title'|trans }}</h2>
 
-<p> Kunde: <strong>{{ summaries['2_3'].customer }}</strong></p>
-<p> Projekt: <strong>{{ summaries['2_3'].project }}</strong></p>
+<p> Kunde: <strong>{{ summaries|first.customer }}</strong></p>
+<p> Projekt: <strong>{{ summaries|first.project }}</strong></p>
 <p> Stundensatz: <strong>{{ query.customer.hourlyRate }} €</strong></p>
 <p style="margin-bottom: 10px;">
     {{ 'export.period'|trans }}:
@@ -99,10 +99,8 @@
                 <td>{{ entry.activity.name }}</td>
             {% endif %}
             <td>
-                {{ entry.project.customer.name }} - {{ entry.project.name }}{% if entry.activity is not null %} - {{ entry.activity.name }}{% endif %}
                 {% if entry.description is not empty %}
-                    <br>
-                    <i>{{ entry.description|escape|desc2html }}</i>
+                    {{ entry.description|escape|desc2html }}
                 {% endif %}
             </td>
             <td class="duration">{{ entry.duration|duration }}</td>
