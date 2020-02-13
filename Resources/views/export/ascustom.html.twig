@@ -94,6 +94,8 @@
         #export-records thead tr {
             background-color: #65bbe3;
         }
+        .left {float: left;}
+        .right {float: right;}
     </style>
 {% endblock %}
 
@@ -143,10 +145,13 @@
     <div class="row">
         <div class="col-xs-12">
             <h2>{{ 'export.document_title'|trans }}</h2>
-            <p>
-                {{ 'export.period'|trans }}:
-                {{ query.begin|date_short }} - {{ query.end|date_short }}
-            </p>
+            <div style="width:300px;">
+              <p> Kunde: <span class="right"><strong>{{ summaries|first.customer }}</strong></span></p>
+              <p>
+                  {{ 'export.period'|trans }}:
+                  <span class="right"><strong>{{ query.begin|date_short }} - {{ query.end|date_short }}</strong></span>
+              </p>
+            </div>
         </div>
     </div>
 

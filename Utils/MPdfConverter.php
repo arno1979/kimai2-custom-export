@@ -13,8 +13,16 @@ use App\Constants;
 use Mpdf\Mpdf;
 use Mpdf\Output\Destination;
 
-class MPdfConverter implements HtmlToPdfConverter
+class MPdfConverter implements HtmlToPdfConverter 
 {
+
+    private $cacheDirectory;
+
+    public function __construct(string $cacheDirectory)
+    {
+        $this->cacheDirectory = $cacheDirectory;
+    }
+
     /**
      * @param string $html
      * @return mixed|string
@@ -28,6 +36,7 @@ class MPdfConverter implements HtmlToPdfConverter
         $fontData = $defaultFontConfig['fontdata'];
 
         $mpdf = new Mpdf([
+          'tempDir' => $this->cacheDirectory,
           'orientation' => 'L',
           'fontDir' => array_merge($fontDirs, [
               __DIR__ . '/../ttfonts',
@@ -35,8 +44,15 @@ class MPdfConverter implements HtmlToPdfConverter
           'fontdata' => $fontData + [
               'roboto' => [
                   'R' => 'Roboto-Regular.ttf',
-                  'I' => 'Roboto-Italic.ttf'
+                  'B' => 'Roboto-Bold.ttf',
+                  'I' => 'Roboto-Italic.ttf',
+                  'BI' => 'Roboto-BoldItalic.ttf'
+              ],
+              'robotoslab' => [
+                  'R' => 'RobotoSlab-VariableFont.ttf',
+                  'B' => 'RobotoSlab-Bold.ttf'
               ]
+              
           ],
           'default_font' => 'roboto'
           

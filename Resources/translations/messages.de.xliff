@@ -10,6 +10,10 @@
                 <source>button.pdf-ascustom</source>
                 <target>Custom PDF Export</target>
             </trans-unit>
+            <trans-unit id="export.document_custom_title">
+                <source>export.document_custom_title</source>
+                <target>Leistungsnachweis</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

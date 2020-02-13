@@ -8,3 +8,6 @@ services:
     KimaiPlugin\CustomExportBundle\:
         resource: '../../*'
         exclude: '../../{Resources}'
+
+    KimaiPlugin\CustomExportBundle\Utils\MPdfConverter:
+        arguments: ['%kernel.cache_dir%']

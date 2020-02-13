@@ -9,57 +9,64 @@
 <html>
 <head>
     <style>
-        body {font-family: roboto, sans-serif;
-            font-size: 10pt;
+        body {
+          font-family: roboto, sans-serif;
+          font-size: 10pt;
         }
-        p {margin: 0pt; }
+        h2 {
+          font-family: robotoslab;
+          font-weight: regular;
+          font-size: 16pt;
+        }
+        p {
+          margin: 0pt;
+        }
         table.items {
-/*             border: 0.1mm solid #000000; */
         }
-        td { vertical-align: top; }
+        td {
+          vertical-align: top;
+        }
         .items td {
-/* 
-            border-left: 0.1mm solid #000000;
-            border-right: 0.1mm solid #000000;
- */
         }
         .items tr.even {
-            background-color: #efefef;
+          background-color: #efefef;
         }
         .items tr.summary {
         }
         .items tr.summary td {
-            font-weight: bold;
-            border-top: 0.1mm solid #000000;
-/*             border-bottom: 0.1mm solid #000000; */
+          font-weight: bold;
+          border-top: 0.1mm solid #000000;
         }
         table thead td {
-            background-color: #65bbe3;
-/*             text-align: center; */
-/*             border: 0.1mm solid #000000; */
+          background-color: #65bbe3;
         }
         .items td.totals {
-            font-weight: bold;
-/*             text-align: right; */
-/*             border: 0.1mm solid #000000; */
+          font-weight: bold;
         }
         .items td.duration,
         .items td.cost {
-/*             text-align: center; */
+        }
+        .left {
+          float: left;
+          width:28%;
+        }
+        .right {
+          float: right;
+          width:72%
         }
     </style>
 </head>
 <body>
 
-<h2 style="margin-bottom: 0; padding-bottom: 0">{{ 'export.document_title'|trans }}</h2>
+<h2>{{ 'export.document_custom_title'|trans }}</h2>
 
-<p> Kunde: <strong>{{ summaries|first.customer }}</strong></p>
-<p> Projekt: <strong>{{ summaries|first.project }}</strong></p>
-<p> Stundensatz: <strong>{{ query.customer.hourlyRate }} €</strong></p>
-<p style="margin-bottom: 10px;">
-    {{ 'export.period'|trans }}:
-    <strong>{{ query.begin|date_short }} - {{ query.end|date_short }}</strong>
-</p>
+<div style="width:300px;">
+  <p class="left">Kunde:</p> <p class="right"><strong>{{ summaries|first.customer }}</strong></p>
+  <p class="left">Projekt:</p> <p class="right"><strong>{{ summaries|first.project }}</strong></p>
+  <p class="left">Stundensatz:</p> <p class="right"><strong>{{ query.customer.hourlyRate }} €</strong></p>
+  <p class="left" style="margin-bottom: 10px;">{{ 'export.period'|trans }}:</p><p class="right"><strong>{{ query.begin|date_short }} - {{ query.end|date_short }}</strong></p>
+  <div style="clear: both; margin: 0pt; padding: 0pt; "></div>
+</div>
 
 {% set duration = 0 %}
 {% set rate = 0 %}
