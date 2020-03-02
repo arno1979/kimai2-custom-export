@@ -63,7 +63,9 @@
 <div style="width:300px;">
   <p class="left">Kunde:</p> <p class="right"><strong>{{ summaries|first.customer }}</strong></p>
   <p class="left">Projekt:</p> <p class="right"><strong>{{ summaries|first.project }}</strong></p>
-  <p class="left">Stundensatz:</p> <p class="right"><strong>{{ query.customer.hourlyRate }} €</strong></p>
+  {% if projectRate %}
+    <p class="left">Stundensatz:</p> <p class="right"><strong>{{ projectRate }} €</strong></p>
+  {% endif %}
   <p class="left" style="margin-bottom: 10px;">{{ 'export.period'|trans }}:</p><p class="right"><strong>{{ query.begin|date_short }} - {{ query.end|date_short }}</strong></p>
   <div style="clear: both; margin: 0pt; padding: 0pt; "></div>
 </div>

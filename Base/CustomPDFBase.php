@@ -16,6 +16,8 @@ use KimaiPlugin\CustomExportBundle\Utils\HtmlToPdfConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Twig\Environment;
+use Doctrine\DBAL\Connection;
+
 
 class CustomPDFBase
 {
@@ -33,17 +35,28 @@ class CustomPDFBase
      * @var HtmlToPdfConverter
      */
     private $converter;
+    
+    private $conn;
 
-    public function __construct(Environment $twig, UserDateTimeFactory $dateTime, HtmlToPdfConverter $converter)
+    public function __construct(Environment $twig, UserDateTimeFactory $dateTime, HtmlToPdfConverter $converter, Connection $conn)
     {
         $this->twig = $twig;
         $this->dateTime = $dateTime;
         $this->converter = $converter;
+        $this->conn = $conn;
     }
 
     protected function getTemplate(): string
     {
         return '@CustomExport/export/ascustompdf.html.twig';
+    }
+
+    protected function getRate($query)
+    {
+        $queryBuilder = $this->conn->createQueryBuilder();
+        $data = $queryBuilder->select('rate')->from('kimai2_projects_rates')->where('project_id = '.$query->getProject()->getId().' and user_id = '.$query->getCurrentUser()->getId())->execute()->fetchAll();
+        $projectRate = $data[0]['rate'] ? $data[0]['rate'] : '';
+        return $projectRate;
     }
 
     /**
@@ -61,6 +74,7 @@ class CustomPDFBase
             'query' => $query,
             'now' => $this->dateTime->createDateTime(),
             'summaries' => $this->calculateSummary($timesheets),
+            'projectRate' => $this->getRate($query)
         ]);
 
         $content = $this->converter->convertToPdf($content);
