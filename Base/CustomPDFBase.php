@@ -51,7 +51,19 @@ class CustomPDFBase
         return '@CustomExport/export/ascustompdf.html.twig';
     }
 
-    protected function getRate($query)
+    protected function getOptions(TimesheetQuery $query): array
+    {
+        $decimal = false;
+        if (null !== $query->getCurrentUser()) {
+            $decimal = (bool) $query->getCurrentUser()->getPreferenceValue('timesheet.export_decimal', $decimal);
+        } elseif (null !== $query->getUser()) {
+            $decimal = (bool) $query->getUser()->getPreferenceValue('timesheet.export_decimal', $decimal);
+        }
+
+        return ['decimal' => $decimal];
+    }
+
+    protected function getRate(TimesheetQuery $query)
     {
         $queryBuilder = $this->conn->createQueryBuilder();
         $data = $queryBuilder->select('rate')->from('kimai2_projects_rates')->where('project_id = '.$query->getProject()->getId().' and user_id = '.$query->getCurrentUser()->getId())->execute()->fetchAll();
@@ -69,13 +81,14 @@ class CustomPDFBase
      */
     public function render(array $timesheets, TimesheetQuery $query): Response
     {
-        $content = $this->twig->render($this->getTemplate(), [
+        $content = $this->twig->render($this->getTemplate(), array_merge([
             'entries' => $timesheets,
             'query' => $query,
             'now' => $this->dateTime->createDateTime(),
             'summaries' => $this->calculateSummary($timesheets),
-            'projectRate' => $this->getRate($query)
-        ]);
+            'decimal' => false,
+            'projectRate' => $this->getRate($query),
+        ], $this->getOptions($query)));
 
         $content = $this->converter->convertToPdf($content);
 
