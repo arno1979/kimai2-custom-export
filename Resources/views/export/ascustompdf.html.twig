@@ -98,11 +98,7 @@
         {% endif %}
         <tr class="{{ cycle(['odd', 'even'], loop.index0) }}">
             <td>
-                {{ entry.begin|date_time }}
-                {% if entry.end %}
-                    <br>
-                    {{ entry.end|date_time }}
-                {% endif %}
+                {{ entry.begin|date('m.d.Y') }}
             </td>
             {% if showUserColumn %}
                 <td>{{ entry.activity.name }}</td>
