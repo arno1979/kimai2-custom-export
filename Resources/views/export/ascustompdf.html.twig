@@ -80,7 +80,7 @@
         {% if showUserColumn %}
         <td>{{ 'label.activity'|trans }}</td>
         {% endif %}
-        <td width="">{{ 'label.description'|trans }}</td>
+        <td width="">{{ 'label.description'|trans|escape }}</td>
         <td>{{ 'label.duration'|trans }}</td>
         {% if showRateColumn %}
         <td>{{ 'label.rate'|trans }}</td>
@@ -98,14 +98,14 @@
         {% endif %}
         <tr class="{{ cycle(['odd', 'even'], loop.index0) }}">
             <td>
-                {{ entry.begin|date('m.d.Y') }}
+                {{ entry.begin|date('d.m.Y') }}
             </td>
             {% if showUserColumn %}
                 <td>{{ entry.activity.name }}</td>
             {% endif %}
             <td>
                 {% if entry.description is not empty %}
-                    {{ entry.description|escape|desc2html }}
+                    {{ entry.description|escape }}
                 {% endif %}
             </td>
             <td class="duration">{{ entry.duration|duration }}</td>
