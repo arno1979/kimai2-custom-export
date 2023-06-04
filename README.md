@@ -10,11 +10,12 @@ cd /kimai/var/plugins/
 git clone https://github.com/arno1979/CustomExportBundle.git
 ```
 
-And then rebuild the cache: 
+Copy the TTF files from the `Resources/fonts` folder to `var/data/fonts`
+
+And then rebuild the cache:
 ```
 cd /kimai/
-bin/console cache:clear
-bin/console cache:warmup
+bin/console kimai:reload --env=prod
 ```
 
 ## Notes

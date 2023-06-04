@@ -2,7 +2,7 @@
     "name": "arno1979/kimai-custom-export",
     "description": "A Kimai 2 plugin",
     "type": "kimai-plugin",
-    "version": "1.0",
+    "version": "2.0",
     "require": {
         "kimai/kimai2-composer": "*"
     },
@@ -20,9 +20,13 @@
     ],
     "extra": {
         "kimai": {
-            "require": "1.7",
-            "version": "0.5",
+            "require": 20000,
             "name": "CustomExportBundle"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Arno1979\\CustomExportBundle\\": ""
         }
     }
 }

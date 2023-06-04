@@ -2,17 +2,9 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" target-language="de" datatype="plaintext" original="messages.en.xliff">
         <body>
-            <trans-unit id="button.print-ascustom">
-                <source>button.print-ascustom</source>
-                <target>Custom HTML Export</target>
-            </trans-unit>
             <trans-unit id="button.pdf-ascustom">
                 <source>button.pdf-ascustom</source>
-                <target>Custom PDF Export</target>
-            </trans-unit>
-            <trans-unit id="export.document_custom_title">
-                <source>export.document_custom_title</source>
-                <target>Leistungsnachweis</target>
+                <target>Custom PDF Leistungsnachweis</target>
             </trans-unit>
         </body>
     </file>

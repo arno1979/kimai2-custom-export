@@ -1,0 +1,182 @@
+{% extends 'export/pdf-layout.html.twig' %}
+{% set showRateColumn = true %}
+{% set showRateBudget = false %}
+{% set showTimeBudget = false %}
+{% set showUserColumn = true %}
+{% set showCustomerSummary = false %}
+{% set decimal = true %}
+{% set showDateTimeShort = true %}
+
+{%- set customer = query.customers|length == 1 ? query.customers.0 : null -%}
+{% set project = '' %}
+{% for summary in summaries %}
+  {% set project = summary.project %}
+{% endfor %}
+{%- set filename = 'leistungsnachweis-as-' ~ (project is not null ? project|replace({' ': '-'}) ~ '-' : '') ~ query.begin|date_format('Y-m') -%}
+{%- set option = pdfContext.setOption('filename', filename) -%}
+
+{% block styles %}
+{%- set fontData = pdfContext.setOption('fonts', {
+'roboto': {
+    'R': 'Roboto-Regular.ttf',
+    'B': 'Roboto-Bold.ttf',
+    'I': 'Roboto-Italic.ttf',
+    'BI': 'Roboto-BlackItalic.ttf'
+},
+'robotoslab': {
+    'R': 'RobotoSlab-Regular.ttf',
+    'B': 'RobotoSlab-Bold.ttf',
+    'BI': 'Roboto-BlackItalic.ttf'
+}
+}) -%}
+<style>
+    @page {
+        sheet-size: A4-L;
+    }
+    body {
+      font-family: roboto, sans-serif;
+      font-size: 10pt;
+    }
+    h2 {
+      font-family: robotoslab;
+      font-weight: regular;
+      font-size: 16pt;
+    }
+    p {
+      margin: 0pt;
+    }
+    table.items {
+    }
+    td {
+      vertical-align: top;
+    }
+    .items td {
+    }
+    .items tr.even {
+      background-color: #efefef;
+    }
+    .items tr.summary {
+    }
+    .items tr.summary td {
+      font-weight: bold;
+      border-top: 0.1mm solid #000000;
+    }
+    table thead td {
+      background-color: #65bbe3;
+    }
+    .items td.totals {
+      font-weight: bold;
+    }
+    .items td.duration,
+    .items td.cost {
+    }
+    .left {
+      float: left;
+      width:28%;
+    }
+    .right {
+      float: right;
+      width:72%
+    }
+</style>
+{% endblock %}
+
+{% block title %}{{ 'timesheet.pdf.twig'|trans({}, 'export') }}{% endblock %}
+{% block description %}
+    {% if entry.description is not empty %}
+        {{ entry.description|desc2html }}
+    {% elseif entry.activity is not null %}
+        {{ entry.activity.name }}
+    {% endif %}
+    <br>
+    <small>{{ entry.project.customer.name }}, {{ entry.project.name }}</small>
+{% endblock %}
+
+{% block pdf_footer %}{% endblock %}
+
+{% block summary %}
+  {% block summary_header %}
+    <h2>{{ 'custom_document_title'|trans({}, 'customexport') }}</h2>
+
+    <div style="width:300px;">
+      <p class="left">Kunde:</p> <p class="right"><strong>{{ summaries|first.customer }}</strong></p>
+      <p class="left">Projekt:</p> <p class="right"><strong>{{ summaries|first.project }}</strong></p>
+      {% if projectRate %}
+        <p class="left">Stundensatz:</p> <p class="right"><strong>{{ projectRate }} €</strong></p>
+      {% endif %}
+      <p class="left" style="margin-bottom: 10px;">{{ 'export.period'|trans }}:</p><p class="right"><strong>{{ query.begin|date('d.m.Y') }} - {{ query.end|date('d.m.Y') }}</strong></p>
+      <div style="clear: both; margin: 0pt; padding: 0pt; "></div>
+    </div>
+
+  {% endblock %}
+{% endblock %}
+
+{% block items %}
+  {% block items_header %}{% endblock %}
+  {% set duration = 0 %}
+  {% set rate = 0 %}
+  {% set rateInternal = 0 %}
+  {% set currency = false %}
+
+  <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; " cellpadding="8">
+      <thead>
+      <tr>
+          <td>{{ 'date'|trans }}</td>
+          {% if showUserColumn %}
+          <td>{{ 'activity'|trans }}</td>
+          {% endif %}
+          <td width="">{{ 'description'|trans|escape }}</td>
+          <td>{{ 'duration'|trans }}</td>
+          {% if showRateColumn %}
+          <td>{{ 'rate'|trans({}, 'customexport') }}</td>
+          {% endif %}
+      </tr>
+      </thead>
+      <tbody>
+      {% for entry in entries %}
+          {% set duration = duration + entry.duration %}
+          {% if currency is same as(false) %}
+              {% set currency = entry.project.customer.currency %}
+          {% endif %}
+          {% if currency is not same as(entry.project.customer.currency) %}
+              {% set currency = null %}
+          {% endif %}
+          <tr class="{{ cycle(['odd', 'even'], loop.index0) }}">
+              <td>
+                  {{ entry.begin|date('d.m.Y') }}
+              </td>
+              {% if showUserColumn %}
+                  <td>{{ entry.activity.name }}</td>
+              {% endif %}
+              <td>
+                  {% if entry.description is not empty %}
+                      {{ entry.description|escape }}
+                  {% endif %}
+              </td>
+              <td class="duration">{{ entry.duration|duration|date('H:i') }} h</td>
+              {% if showRateColumn %}
+              <td class="cost">
+                  {% if is_granted('view_rate', entry) %}
+                  {% set rate = rate + entry.rate %}
+                  {{ entry.rate|money(entry.project.customer.currency) }}
+                  {% else %}
+                      &ndash;
+                  {% endif %}
+              </td>
+              {% endif %}
+          </tr>
+      {% endfor %}
+      <tr class="summary">
+          {% if showUserColumn %}
+              <td colspan="3"></td>
+          {% else %}
+          <td colspan="2"></td>
+          {% endif %}
+          <td class="totals duration">{{ duration|duration|date('H:i') }} h</td>
+          {% if showRateColumn %}
+          <td class="totals cost">{% if currency is not null %}{{ rate|money(currency) }}{% endif %}</td>
+          {% endif %}
+      </tr>
+      </tbody>
+  </table>
+{% endblock %}
