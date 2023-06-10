@@ -2,7 +2,7 @@
     "name": "arno1979/kimai-custom-export",
     "description": "A Kimai 2 plugin",
     "type": "kimai-plugin",
-    "version": "2.0",
+    "version": "2.1",
     "require": {
         "kimai/kimai2-composer": "*"
     },

@@ -12,8 +12,6 @@
 {% for summary in summaries %}
   {% set project = summary.project %}
 {% endfor %}
-{%- set filename = 'leistungsnachweis-as-' ~ (project is not null ? project|replace({' ': '-'}) ~ '-' : '') ~ query.begin|date_format('Y-m') -%}
-{%- set option = pdfContext.setOption('filename', filename) -%}
 
 {% block styles %}
 {%- set fontData = pdfContext.setOption('fonts', {

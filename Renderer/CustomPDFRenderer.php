@@ -13,6 +13,7 @@ use App\Entity\ExportableItem;
 use App\Export\ExportFilename;
 use App\Export\ExportRendererInterface;
 use App\Entity\Timesheet;
+use App\Entity\ProjectMeta;
 use App\Timesheet\DateTimeFactory;
 use App\Pdf\HtmlToPdfConverter;
 use App\Pdf\PdfContext;
@@ -21,9 +22,12 @@ use App\Project\ProjectStatisticService;
 use App\Export\RendererInterface;
 use App\Export\Base\RendererTrait;
 use App\Repository\Query\TimesheetQuery;
+use App\Repository\Query\ProjectQuery;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Doctrine\DBAL\Connection;
+use KimaiPlugin\CustomExportBundle\EventSubscriber\MetaFieldDisplaySubscriber;
+
 
 final class CustomPDFRenderer implements RendererInterface
 {
@@ -31,7 +35,7 @@ final class CustomPDFRenderer implements RendererInterface
     use PDFRendererTrait;
 
     private string $id = 'ascustompdf';
-    private string $template = 'arno-leistungsnachweis.pdf.twig';
+    private string $template = 'custom-export.pdf.twig';
     private array $pdfOptions = [];
 
     public function __construct(Environment $twig, DateTimeFactory $dateTime, HtmlToPdfConverter $converter, Connection $conn, private ProjectStatisticService $projectStatisticService)
@@ -52,9 +56,17 @@ final class CustomPDFRenderer implements RendererInterface
      */
     public function render(array $timesheets, TimesheetQuery $query): Response
     {
-        $filename = new ExportFilename($query);
+
         $context = new PdfContext();
+        $filename = new ExportFilename($query);
         $context->setOption('filename', $filename->getFilename());
+
+        $customFilename = $query->getProjects()[0]->getMetaField('custom_export_filename');
+        if ($query->getProjects()[0]->getMetaField('custom_export_filename') !== null && $query->getProjects()[0]->getMetaField('custom_export_filename')->getValue() !== null)
+        {
+          $filename = $query->getProjects()[0]->getMetaField('custom_export_filename')->getValue().$query->getBegin()->format('Y-m');
+          $context->setOption('filename', $filename);
+        }
 
         $summary = $this->calculateSummary($timesheets);
         $content = $this->twig->render($this->getTemplate(), array_merge([
@@ -66,6 +78,7 @@ final class CustomPDFRenderer implements RendererInterface
             'decimal' => false,
             'pdfContext' => $context,
             'projectRate' => $this->getRate($query),
+            'filename' => $filename,
         ], $this->getOptions($query)));
 
         $pdfOptions = array_merge($context->getOptions(), $this->getPdfOptions());
