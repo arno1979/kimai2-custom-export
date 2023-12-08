@@ -7,7 +7,7 @@ A Kimai 2 bundle providing a custom HTML and PDF export template.
 First clone it to your Kimai installation `plugins` directory:
 ```
 cd /kimai/var/plugins/
-git clone https://github.com/arno1979/CustomExportBundle.git
+git clone https://github.com/arno1979/kimai2-custom-export.git CustomExportBundle
 ```
 
 Copy the TTF files from the `Resources/fonts` folder to `var/data/fonts`
